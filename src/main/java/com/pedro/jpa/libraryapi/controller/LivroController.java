@@ -1,0 +1,88 @@
+package com.pedro.jpa.libraryapi.controller;
+
+import com.pedro.jpa.libraryapi.dto.CadastroLivroDTO;
+import com.pedro.jpa.libraryapi.dto.ResultadoPesquisaLivroDTO;
+import com.pedro.jpa.libraryapi.mappers.LivroMapper;
+import com.pedro.jpa.libraryapi.model.GeneroLivro;
+import com.pedro.jpa.libraryapi.model.Livro;
+import com.pedro.jpa.libraryapi.service.LivroService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/livros")
+@RequiredArgsConstructor
+public class LivroController implements GenericController {
+
+    private final LivroService livroService;
+    private final LivroMapper livroMapper;
+
+    @PostMapping
+    public ResponseEntity<Void> salvar(@RequestBody @Valid CadastroLivroDTO cadastroLivroDTO) {
+        Livro livro = livroMapper.toEntity(cadastroLivroDTO);
+        livroService.salvar(livro);
+        URI uri = gerarHeaderLocation(livro.getId());
+        return ResponseEntity.created(uri).build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResultadoPesquisaLivroDTO> obterDetalhes(@PathVariable String id) {
+        return livroService.obterPorId(UUID.fromString(id))
+                .map(livro -> {
+                    ResultadoPesquisaLivroDTO dto = livroMapper.toDTO(livro);
+                    return ResponseEntity.ok(dto);
+                }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deletarLivro(@PathVariable String id) {
+        return livroService.obterPorId(UUID.fromString(id))
+                .map(livro -> {
+                    livroService.deletar(livro);
+                    return ResponseEntity.noContent().build();
+                }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ResultadoPesquisaLivroDTO>> pesquisa(
+            @RequestParam(value = "isbn", required = false) String isbn,
+            @RequestParam(value = "titulo", required = false) String titulo,
+            @RequestParam(value = "nome-autor", required = false) String nomeAutor,
+            @RequestParam(value = "genero", required = false) GeneroLivro genero,
+            @RequestParam(value = "ano-publicacao", required = false) Integer anoPublicacao,
+            @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
+            @RequestParam(value = "tamanho-pagina", defaultValue = "10") Integer tamanhoPagina
+    ) {
+        Page<Livro> paginaResultado = livroService.pesquisa(isbn, titulo, nomeAutor, genero, anoPublicacao, pagina, tamanhoPagina);
+
+        Page<ResultadoPesquisaLivroDTO> resultadoPesquisaLivroDTOS = paginaResultado.map(livroMapper::toDTO);
+
+        return ResponseEntity.ok(resultadoPesquisaLivroDTOS);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> atualizar(@PathVariable String id, @RequestBody @Valid CadastroLivroDTO dto) {
+        return livroService.obterPorId(UUID.fromString(id))
+                .map(livro -> {
+                    Livro entidadeAux = livroMapper.toEntity(dto);
+                    livro.setDataPublicacao(entidadeAux.getDataPublicacao());
+                    livro.setIsbn(entidadeAux.getIsbn());
+                    livro.setPreco(entidadeAux.getPreco());
+                    livro.setTitulo(entidadeAux.getTitulo());
+                    livro.setAutor(entidadeAux.getAutor());
+
+                    livroService.atualizar(livro);
+
+                    return ResponseEntity.noContent().build();
+
+                }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+}
