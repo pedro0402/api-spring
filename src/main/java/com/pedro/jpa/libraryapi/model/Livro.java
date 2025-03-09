@@ -1,5 +1,6 @@
 package com.pedro.jpa.libraryapi.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class Livro {
     private String titulo;
 
     @Column(name = "data_publicacao", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dataPublicacao;
 
     @Column(name = "genero", nullable = false)

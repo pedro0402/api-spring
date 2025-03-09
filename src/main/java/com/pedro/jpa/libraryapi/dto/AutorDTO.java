@@ -1,5 +1,6 @@
 package com.pedro.jpa.libraryapi.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -17,6 +18,7 @@ public record AutorDTO(
 
         @NotNull(message = "Campo obrigatório")
         @Past(message = "Não pode ser uma data futura")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         LocalDate dataNascimento,
 
         @NotBlank(message = "Campo obrigatório")
