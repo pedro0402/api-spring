@@ -3,8 +3,10 @@ package com.pedro.jpa.libraryapi.service;
 import com.pedro.jpa.libraryapi.dto.AutorDTO;
 import com.pedro.jpa.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import com.pedro.jpa.libraryapi.model.Autor;
+import com.pedro.jpa.libraryapi.model.Usuario;
 import com.pedro.jpa.libraryapi.repository.AutorRepository;
 import com.pedro.jpa.libraryapi.repository.LivroRepository;
+import com.pedro.jpa.libraryapi.security.SecurityService;
 import com.pedro.jpa.libraryapi.validator.AutorValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -22,9 +24,13 @@ public class AutorService {
     private final AutorRepository autorRepository;
     private final LivroRepository livroRepository;
     private final AutorValidator validator;
+    private final SecurityService securityService;
+
 
     public Autor salvar(Autor autor) {
         validator.validar(autor);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        autor.setUsuario(usuario);
         return autorRepository.save(autor);
     }
 
