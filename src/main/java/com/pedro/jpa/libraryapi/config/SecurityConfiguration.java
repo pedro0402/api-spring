@@ -25,15 +25,17 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(configurer -> {
-                    configurer.loginPage("/login");
-                })
+//                .formLogin(configurer -> {
+//                    configurer.loginPage("/login");
+//                })
+                .formLogin(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> {
                     request.requestMatchers("/login").permitAll();
                     request.requestMatchers(HttpMethod.POST, "/usuarios").permitAll();
 
                     request.anyRequest().authenticated(); // precisa ser minha última linha aq
                 })
+                .oauth2Login(Customizer.withDefaults())
                 .build();
     }
 
