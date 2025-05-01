@@ -37,7 +37,7 @@ public class AuthorizationServerConfiguration {
     public SecurityFilterChain authSecurityFilterChain(HttpSecurity http) throws Exception {
         
         http
-                .securityMatcher("/oauth2/**", "/.well-known/**", "/login")
+                .securityMatcher("")
                 .with(OAuth2AuthorizationServerConfigurer.authorizationServer(), Customizer.withDefaults());
 
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(Customizer.withDefaults());
