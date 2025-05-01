@@ -34,15 +34,17 @@ public class AuthorizationServerConfiguration {
 
     @Bean
     @Order(1)
-    public SecurityFilterChain authSecurityFilterChain(HttpSecurity http) throws Exception {
-        
-        http
-                .securityMatcher("")
-                .with(OAuth2AuthorizationServerConfigurer.authorizationServer(), Customizer.withDefaults());
+    public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http) throws Exception {
 
-        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(Customizer.withDefaults());
-        http.oauth2ResourceServer(oAuth2Rs -> oAuth2Rs.jwt(Customizer.withDefaults()));
+        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+
+        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+                .oidc(Customizer.withDefaults());
+
+        http.oauth2ResourceServer(oauth2Rs -> oauth2Rs.jwt(Customizer.withDefaults()));
+
         http.formLogin(configurer -> configurer.loginPage("/login"));
+
         return http.build();
     }
 

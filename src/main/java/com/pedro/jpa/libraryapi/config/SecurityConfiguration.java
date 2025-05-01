@@ -22,15 +22,14 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, LoginSocialSuccessHandler loginSocialSuccessHandler) throws Exception {
         return http
-                .securityMatcher("/**")
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(configurer -> {
                     configurer.loginPage("/login");
                 })
                 .authorizeHttpRequests(request -> {
-                    request.requestMatchers("/login").permitAll();
-                    request.requestMatchers(HttpMethod.POST, "/usuarios").permitAll();
+                    request.requestMatchers("/login/**").permitAll();
+                    request.requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll();
 
                     request.anyRequest().authenticated(); // precisa ser minha última linha aq
                 })
