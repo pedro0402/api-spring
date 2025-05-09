@@ -4,6 +4,7 @@ import com.pedro.jpa.libraryapi.model.Autor;
 import com.pedro.jpa.libraryapi.model.GeneroLivro;
 import com.pedro.jpa.libraryapi.model.Livro;
 import com.pedro.jpa.libraryapi.repository.AutorRepository;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Schema(name = "Livro")
 public record CadastroLivroDTO(
 
         @NotBlank(message = "campo obrigatório")
