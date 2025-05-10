@@ -17,7 +17,7 @@ public class ClientService {
     private final PasswordEncoder passwordEncoder;
     private final ClientValidator clientValidator;
 
-    public Client salvar(Client client) {
+    public Client save(Client client) {
         clientValidator.validate(client);
         String senha = client.getClientSecret();
         client.setClientSecret(passwordEncoder.encode(senha));
