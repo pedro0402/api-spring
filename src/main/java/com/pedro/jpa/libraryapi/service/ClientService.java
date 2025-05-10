@@ -24,6 +24,15 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
+    public void update(Client client) {
+        if (client.getClientId() == null) {
+            throw new IllegalArgumentException("To update, the client must already be in the database");
+        }
+        clientValidator.validate(client);
+        client.setClientSecret(passwordEncoder.encode(client.getClientSecret()));
+        clientRepository.save(client);
+    }
+
     public Optional<Client> obterPorClientId(String clientId) {
         return clientRepository.findByClientId(clientId);
     }
