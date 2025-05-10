@@ -1,5 +1,7 @@
 package com.pedro.jpa.libraryapi.controller;
 
+import com.pedro.jpa.libraryapi.dto.ClientDTO;
+import com.pedro.jpa.libraryapi.mappers.ClientMapper;
 import com.pedro.jpa.libraryapi.model.Client;
 import com.pedro.jpa.libraryapi.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,15 +24,17 @@ import java.net.URI;
 public class ClientController implements GenericController {
 
     private final ClientService clientService;
+    private final ClientMapper clientMapper;
 
     @PostMapping
     @PreAuthorize("hasRole('GERENTE')")
     @Operation(summary = "Salvar", description = "Salvar um client")
     @ApiResponse(responseCode = "201", description = "Client cadastrado com sucesso")
-    public ResponseEntity<Void> salvar(@RequestBody Client client) {
-        //não é o ideal cadastrar logo a entidade. o ideal seria criar um dto e dps mapea-lo.
+    public ResponseEntity<Void> salvar(@RequestBody ClientDTO clientDTO) {
+        Client client = clientMapper.toEntity(clientDTO);
         clientService.salvar(client);
         URI uri = gerarHeaderLocation(client.getId());
         return ResponseEntity.created(uri).build();
     }
+
 }
