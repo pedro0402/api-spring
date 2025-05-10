@@ -11,6 +11,8 @@ import org.springframework.security.oauth2.server.authorization.settings.ClientS
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class CustomRegisteredClientRepository implements RegisteredClientRepository {
@@ -31,22 +33,21 @@ public class CustomRegisteredClientRepository implements RegisteredClientReposit
 
     @Override
     public RegisteredClient findByClientId(String clientId) {
-        Client client = clientService.obterPorClientId(clientId);
+        Optional<Client> client = clientService.obterPorClientId(clientId);
 
-        if (client == null) return null;
-
-        return RegisteredClient
-                .withId(client.getId().toString())
-                .clientId(client.getClientId())
-                .clientSecret(client.getClientSecret())
-                .redirectUri(client.getRedirectURI())
-                .scope(client.getScope())
+        return client.map(value -> RegisteredClient
+                .withId(value.getClientId())
+                .clientId(value.getClientId())
+                .clientSecret(value.getClientSecret())
+                .redirectUri(value.getRedirectURI())
+                .scope(value.getScope())
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .tokenSettings(tokenSettings)
                 .clientSettings(clientSettings)
-                .build();
+                .build()).orElse(null);
+
     }
 }
