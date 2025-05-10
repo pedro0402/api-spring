@@ -37,4 +37,24 @@ public class ClientController implements GenericController {
         return ResponseEntity.created(uri).build();
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('GERENTE')")
+    public ResponseEntity<Void> updateClient(@PathVariable String id, @RequestBody @Valid ClientDTO clientDTO){
+        UUID uuid = UUID.fromString(id);
+        Optional<Client> clientOptional = clientService.findById(uuid);
+
+        if (clientOptional.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+
+        Client client = clientOptional.get();
+        client.setClientId(clientDTO.clientId());
+        client.setClientSecret(clientDTO.clientSecret());
+        client.setRedirectURI(clientDTO.redirectURI());
+
+        clientService.update(client);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
