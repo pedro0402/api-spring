@@ -32,7 +32,7 @@ public class ClientController implements GenericController {
     @ApiResponse(responseCode = "201", description = "Client cadastrado com sucesso")
     public ResponseEntity<Void> salvar(@RequestBody ClientDTO clientDTO) {
         Client client = clientMapper.toEntity(clientDTO);
-        clientService.salvar(client);
+        clientService.save(client);
         URI uri = gerarHeaderLocation(client.getId());
         return ResponseEntity.created(uri).build();
     }
