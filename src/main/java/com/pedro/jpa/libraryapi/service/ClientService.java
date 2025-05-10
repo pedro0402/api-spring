@@ -20,7 +20,7 @@ public class ClientService {
     public Client salvar(Client client) {
         clientValidator.validate(client);
         String senha = client.getClientSecret();
-        client.setClientSecret(passwordEncoder.encode(senha)); //criando a senha criptografada no banco
+        client.setClientSecret(passwordEncoder.encode(senha));
         return clientRepository.save(client);
     }
 
