@@ -37,4 +37,10 @@ public class ClientService {
         return clientRepository.findByClientId(clientId);
     }
 
+    public Optional<Client> findById(UUID uuid){
+        return clientRepository.findById(uuid);
+    }
+
+   
+
 }
