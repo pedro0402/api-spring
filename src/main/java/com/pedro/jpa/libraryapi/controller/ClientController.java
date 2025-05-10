@@ -39,6 +39,11 @@ public class ClientController implements GenericController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('GERENTE')")
+    @Operation(summary = "Atualizar", description = "Atualizar um client")
+    @ApiResponses({
+            @ApiResponse(responseCode = "404", description = "Client não encontrado"),
+            @ApiResponse(responseCode = "204", description = "Client atualizado com sucesso")
+    })
     public ResponseEntity<Void> updateClient(@PathVariable String id, @RequestBody @Valid ClientDTO clientDTO){
         UUID uuid = UUID.fromString(id);
         Optional<Client> clientOptional = clientService.findById(uuid);
