@@ -22,7 +22,7 @@ public class AutorValidator {
         }
     }
 
-    public boolean existeAutorCadastrado(Autor autor) {
+    private boolean existeAutorCadastrado(Autor autor) {
         Optional<Autor> autorEncontrado = autorRepository.findByNomeAndDataNascimentoAndNacionalidade(
                 autor.getNome(),
                 autor.getDataNascimento(),
