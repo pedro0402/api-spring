@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ClientService {
@@ -20,7 +22,7 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
-    public Client obterPorClientId(String clientId) {
+    public Optional<Client> obterPorClientId(String clientId) {
         return clientRepository.findByClientId(clientId);
     }
 
