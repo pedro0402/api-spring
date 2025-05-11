@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
@@ -20,6 +23,19 @@ public class UsuarioService {
         String senha = usuario.getSenha();
         usuario.setSenha(passwordEncoder.encode(senha));
         usuarioRepository.save(usuario);
+    }
+
+    public void update(Usuario usuario){
+        if (usuario.getId() == null){
+            throw new IllegalArgumentException("To update, the client must already be in the database");
+        }
+        usuarioValidator.validate(usuario);
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        usuarioRepository.save(usuario);
+    }
+
+    public Optional<Usuario> findById(UUID id){
+        return usuarioRepository.findById(id);
     }
 
     public Usuario obterPorLogin(String login) {
