@@ -1,6 +1,7 @@
 package com.pedro.jpa.libraryapi.mappers;
 
 import com.pedro.jpa.libraryapi.dto.ClientDTO;
+import com.pedro.jpa.libraryapi.dto.ClientResponseDTO;
 import com.pedro.jpa.libraryapi.model.Client;
 import org.mapstruct.Mapper;
 
