@@ -9,5 +9,7 @@ public interface ClientMapper {
 
     Client toEntity(ClientDTO clientDTO);
 
-    ClientDTO toDTO(Client client);
+    ClientDTO toClientDTO(Client client);
+
+    ClientResponseDTO toClientResponseDTO(Client client);
 }
