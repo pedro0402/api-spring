@@ -45,7 +45,8 @@ public class ClientService {
         return clientRepository.findAll();
     }
 
-
-    
+    public void delete(Client client) {
+        clientRepository.delete(client);
+    }
 
 }
