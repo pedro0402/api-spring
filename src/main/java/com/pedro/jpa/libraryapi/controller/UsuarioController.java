@@ -1,5 +1,6 @@
 package com.pedro.jpa.libraryapi.controller;
 
+import com.pedro.jpa.libraryapi.dto.UserResponseDTO;
 import com.pedro.jpa.libraryapi.dto.UsuarioDTO;
 import com.pedro.jpa.libraryapi.mappers.UsuarioMapper;
 import com.pedro.jpa.libraryapi.model.Usuario;
@@ -9,13 +10,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/usuarios")
 @RequiredArgsConstructor
 @Tag(name = "Usuários")
-public class UsuarioController {
+public class UsuarioController implements GenericController {
 
     private final UsuarioService usuarioService;
     private final UsuarioMapper usuarioMapper;
@@ -23,8 +28,28 @@ public class UsuarioController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Salvar", description = "Salvar um usuário")
-    public void salvar(@RequestBody @Valid UsuarioDTO dto){
+    public ResponseEntity<Void> salvar(@RequestBody @Valid UsuarioDTO dto) {
         Usuario entity = usuarioMapper.toEntity(dto);
         usuarioService.salvar(entity);
+        return ResponseEntity.created(gerarHeaderLocation(entity.getId())).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateUser(@PathVariable String id, @RequestBody @Valid UserResponseDTO userResponseDTO) {
+        UUID userId = UUID.fromString(id);
+        Optional<Usuario> usuarioOptional = usuarioService.findById(userId);
+
+        if (usuarioOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Usuario usuario = usuarioOptional.get();
+        usuario.setLogin(userResponseDTO.login());
+        usuario.setSenha(userResponseDTO.senha());
+        usuario.setEmail(userResponseDTO.email());
+
+        usuarioService.update(usuario);
+
+        return ResponseEntity.noContent().build();
     }
 }
