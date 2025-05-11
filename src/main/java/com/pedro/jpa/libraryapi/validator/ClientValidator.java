@@ -18,7 +18,6 @@ public class ClientValidator {
         if (clientAlreadyExists(client)){
             throw new RegistroDuplicadoException("Client is already registered");
         }
-        clientAlreadyExists(client);
     }
 
     private boolean clientAlreadyExists(Client client){
