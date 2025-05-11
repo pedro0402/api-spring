@@ -41,6 +41,11 @@ public class ClientService {
         return clientRepository.findById(uuid);
     }
 
-   
+    public List<Client> findAllClients(){
+        return clientRepository.findAll();
+    }
+
+
+    
 
 }
