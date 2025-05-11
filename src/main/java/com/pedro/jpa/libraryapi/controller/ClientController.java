@@ -78,6 +78,12 @@ public class ClientController implements GenericController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('GERENTE')")
+    @Operation(summary = "Deletar", description = "Deletar um client")
+    @ApiResponses({
+            @ApiResponse(responseCode = "404", description = "Client não encontrado na base"),
+            @ApiResponse(responseCode = "204", description = "Client deletado com sucesso")
+    })
     public ResponseEntity<Void> deleteClient(@PathVariable String id) {
         UUID clientId = UUID.fromString(id);
         Optional<Client> clientOptional = clientService.findById(clientId);
