@@ -77,4 +77,16 @@ public class ClientController implements GenericController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteClient(@PathVariable String id) {
+        UUID clientId = UUID.fromString(id);
+        Optional<Client> clientOptional = clientService.findById(clientId);
+
+        if (clientOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        clientService.delete(clientOptional.get());
+        return ResponseEntity.noContent().build();
+    }
+
 }
