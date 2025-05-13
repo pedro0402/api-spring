@@ -25,8 +25,8 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-    public void update(Usuario usuario){
-        if (usuario.getId() == null){
+    public void update(Usuario usuario) {
+        if (usuario.getId() == null) {
             throw new IllegalArgumentException("To update, the client must already be in the database");
         }
         usuarioValidator.validate(usuario);
@@ -34,8 +34,12 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-    public Optional<Usuario> findById(UUID id){
+    public Optional<Usuario> findById(UUID id) {
         return usuarioRepository.findById(id);
+    }
+
+    public void delete(Usuario usuario) {
+        usuarioRepository.delete(usuario);
     }
 
     public Usuario obterPorLogin(String login) {
@@ -43,6 +47,6 @@ public class UsuarioService {
     }
 
     public Usuario obterPorEmail(String email) {
-       return usuarioRepository.findByEmail(email);
+        return usuarioRepository.findByEmail(email);
     }
 }
