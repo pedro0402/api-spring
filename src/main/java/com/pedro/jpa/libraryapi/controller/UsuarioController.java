@@ -47,9 +47,9 @@ public class UsuarioController implements GenericController {
         }
 
         Usuario usuario = usuarioOptional.get();
-        usuario.setLogin(userResponseDTO.login());
-        usuario.setSenha(userResponseDTO.senha());
-        usuario.setEmail(userResponseDTO.email());
+        usuario.setLogin(userRequestDTO.login());
+        usuario.setSenha(userRequestDTO.senha());
+        usuario.setEmail(userRequestDTO.email());
 
         usuarioService.update(usuario);
 
