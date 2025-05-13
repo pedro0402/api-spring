@@ -38,7 +38,7 @@ public class UsuarioController implements GenericController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('GERENTE')")
-    public ResponseEntity<Void> updateUser(@PathVariable String id, @RequestBody @Valid UserResponseDTO userResponseDTO) {
+    public ResponseEntity<Void> updateUser(@PathVariable String id, @RequestBody @Valid UserRequestDTO userRequestDTO) {
         UUID userId = UUID.fromString(id);
         Optional<Usuario> usuarioOptional = usuarioService.findById(userId);
 
