@@ -33,7 +33,8 @@ public class ClientController implements GenericController {
     @PreAuthorize("hasAnyRole('GERENTE', 'OPERADOR')")
     @Operation(summary = "Buscar", description = "Busca os clientes")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Busca feita com sucesso")
+            @ApiResponse(responseCode = "200", description = "Busca feita com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Sem clients para fazer a busca")
     })
     public ResponseEntity<List<ClientResponseDTO>> findClients() {
         List<Client> clients = clientService.findAllClients();
