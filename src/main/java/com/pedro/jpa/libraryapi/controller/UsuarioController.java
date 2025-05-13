@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -27,6 +28,7 @@ public class UsuarioController implements GenericController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('GERENTE')")
     @Operation(summary = "Salvar", description = "Salvar um usuário")
     public ResponseEntity<Void> salvar(@RequestBody @Valid UsuarioDTO dto) {
         Usuario entity = usuarioMapper.toEntity(dto);
@@ -35,6 +37,7 @@ public class UsuarioController implements GenericController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Void> updateUser(@PathVariable String id, @RequestBody @Valid UserResponseDTO userResponseDTO) {
         UUID userId = UUID.fromString(id);
         Optional<Usuario> usuarioOptional = usuarioService.findById(userId);
@@ -50,6 +53,20 @@ public class UsuarioController implements GenericController {
 
         usuarioService.update(usuario);
 
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('GERENTE')")
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+        UUID uuid = UUID.fromString(id);
+        Optional<Usuario> usuarioOptional = usuarioService.findById(uuid);
+
+        if (usuarioOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        usuarioService.delete(usuarioOptional.get());
         return ResponseEntity.noContent().build();
     }
 }
