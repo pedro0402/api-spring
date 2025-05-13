@@ -1,5 +1,6 @@
 package com.pedro.jpa.libraryapi.mappers;
 
+import com.pedro.jpa.libraryapi.dto.UserResponseDTO;
 import com.pedro.jpa.libraryapi.dto.UsuarioDTO;
 import com.pedro.jpa.libraryapi.model.Usuario;
 import org.mapstruct.Mapper;
