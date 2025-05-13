@@ -8,4 +8,6 @@ import org.mapstruct.Mapper;
 public interface UsuarioMapper {
 
     Usuario toEntity(UsuarioDTO usuarioDTO);
+
+    UserResponseDTO toUserResponseDto(Usuario usuario);
 }
