@@ -1,5 +1,6 @@
 package com.pedro.jpa.libraryapi.controller;
 
+import com.pedro.jpa.libraryapi.dto.UserRequestDTO;
 import com.pedro.jpa.libraryapi.dto.UserResponseDTO;
 import com.pedro.jpa.libraryapi.dto.UsuarioDTO;
 import com.pedro.jpa.libraryapi.mappers.UsuarioMapper;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -68,5 +70,21 @@ public class UsuarioController implements GenericController {
 
         usuarioService.delete(usuarioOptional.get());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('GERENTE', 'OPERADOR')")
+    public ResponseEntity<List<UserResponseDTO>> findUsers() {
+        List<Usuario> usuarioList = usuarioService.findAllUsers();
+
+        if (usuarioList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(
+                usuarioList.stream()
+                        .map(usuarioMapper::toUserResponseDto)
+                        .toList()
+        );
     }
 }
