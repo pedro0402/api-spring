@@ -31,11 +31,15 @@ public class ClientController implements GenericController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('GERENTE', 'OPERADOR')")
+    @Operation(summary = "Buscar", description = "Busca os clientes")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Busca feita com sucesso")
+    })
     public ResponseEntity<List<ClientResponseDTO>> findClients() {
         List<Client> clients = clientService.findAllClients();
 
         if (clients.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok(clients.stream().map(clientMapper::toClientResponseDTO).toList());
