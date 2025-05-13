@@ -7,6 +7,8 @@ import com.pedro.jpa.libraryapi.mappers.UsuarioMapper;
 import com.pedro.jpa.libraryapi.model.Usuario;
 import com.pedro.jpa.libraryapi.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +33,8 @@ public class UsuarioController implements GenericController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('GERENTE')")
-    @Operation(summary = "Salvar", description = "Salvar um usuário")
+    @Operation(summary = "Salvar", description = "Salvando um novo usuário")
+    @ApiResponse(responseCode = "201", description = "Usuário salvo com sucesso")
     public ResponseEntity<Void> salvar(@RequestBody @Valid UsuarioDTO dto) {
         Usuario entity = usuarioMapper.toEntity(dto);
         usuarioService.salvar(entity);
@@ -40,6 +43,11 @@ public class UsuarioController implements GenericController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('GERENTE')")
+    @Operation(summary = "Atualizar", description = "Atualiza um usuário")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Usuário atualizado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
     public ResponseEntity<Void> updateUser(@PathVariable String id, @RequestBody @Valid UserRequestDTO userRequestDTO) {
         UUID userId = UUID.fromString(id);
         Optional<Usuario> usuarioOptional = usuarioService.findById(userId);
@@ -60,6 +68,11 @@ public class UsuarioController implements GenericController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('GERENTE')")
+    @Operation(summary = "Deletar", description = "Deleta um usário")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Usuário excluído com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         UUID uuid = UUID.fromString(id);
         Optional<Usuario> usuarioOptional = usuarioService.findById(uuid);
@@ -74,6 +87,11 @@ public class UsuarioController implements GenericController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('GERENTE', 'OPERADOR')")
+    @Operation(summary = "Buscar", description = "Busca os usuários")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Busca feita com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Sem usuários para fazer a busca")
+    })
     public ResponseEntity<List<UserResponseDTO>> findUsers() {
         List<Usuario> usuarioList = usuarioService.findAllUsers();
 
