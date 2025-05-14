@@ -23,6 +23,15 @@ spring:
 logging:
   file:
     name: app.log
+  level:
+    root: warn
+    com:
+      pedro:
+        jpa: info
+    org:
+      springframework:
+        web: debug
+        security: trace
 
 springdoc:
   override-with-generic-response: false
