@@ -40,9 +40,9 @@ public class AutorController implements GenericController {
     })
     public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO autorDTO) {
         log.info("Cadastrando um novo autor: {}", autorDTO.nome());
-
         Autor autor = autorMapper.toEntity(autorDTO);
         autorService.salvar(autor);
+        log.info("Autor cadastrado com sucesso: {}", autor.getId());
         URI uri = gerarHeaderLocation(autor.getId());
         return ResponseEntity.created(uri).build();
     }
@@ -78,9 +78,11 @@ public class AutorController implements GenericController {
         UUID idAutor = UUID.fromString(id);
         Optional<Autor> autorOptional = autorService.obterPorId(idAutor);
         if (autorOptional.isEmpty()) {
+            log.warn("Autor com ID {} não encontrado para deleção", id);
             return ResponseEntity.notFound().build();
         }
         autorService.deletar(autorOptional.get());
+        log.info("Autor com ID {} deletado com sucesso");
         return ResponseEntity.noContent().build();
     }
 
@@ -93,6 +95,7 @@ public class AutorController implements GenericController {
     public ResponseEntity<List<AutorDTO>> pesquisar(
             @RequestParam(value = "nome", required = false) String nome,
             @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
+        log.info("Pesquisando autores por nome: '{}' e nacionalidade: '{}'", nome, nacionalidade);
         List<Autor> resultado = autorService.pesquisaByExample(nome, nacionalidade);
         List<AutorDTO> lista = resultado
                 .stream()
@@ -110,10 +113,12 @@ public class AutorController implements GenericController {
             @ApiResponse(responseCode = "409", description = "Autor já cadastrado")
     })
     public ResponseEntity<Void> atualizarAutor(@PathVariable String id, @RequestBody @Valid AutorDTO autorDTO) {
+        log.info("Atualizando autor com ID: {}", id);
         UUID idAutor = UUID.fromString(id);
         Optional<Autor> autorOptional = autorService.obterPorId(idAutor);
 
         if (autorOptional.isEmpty()) {
+            log.warn("Autor com ID {} não encontrado para atualização", id);
             return ResponseEntity.notFound().build();
         }
 
@@ -124,6 +129,8 @@ public class AutorController implements GenericController {
 
         autorService.atualizar(autor);
 
+        log.info("Autor com ID {} atualizado com sucesso");
+        
         return ResponseEntity.noContent().build();
     }
 }
