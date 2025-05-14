@@ -42,9 +42,11 @@ public class ClientController implements GenericController {
         List<Client> clients = clientService.findAllClients();
 
         if (clients.isEmpty()) {
+            log.warn("Nenhum cliente encontrado na base de dados");
             return ResponseEntity.notFound().build();
         }
 
+        log.info("Total de clientes encontrados: {}", clients.size());
         return ResponseEntity.ok(clients.stream().map(clientMapper::toClientResponseDTO).toList());
     }
 
@@ -72,6 +74,7 @@ public class ClientController implements GenericController {
         Optional<Client> clientOptional = clientService.findById(uuid);
 
         if (clientOptional.isEmpty()) {
+            log.warn("Client com ID {} não encontrado para atualização", id);
             return ResponseEntity.notFound().build();
         }
 
