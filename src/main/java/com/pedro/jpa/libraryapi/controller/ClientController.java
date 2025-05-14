@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/clients")
 @Tag(name = "Clients")
+@Slf4j
 public class ClientController implements GenericController {
 
     private final ClientService clientService;
@@ -51,6 +53,7 @@ public class ClientController implements GenericController {
     @Operation(summary = "Salvar", description = "Salvar um client")
     @ApiResponse(responseCode = "201", description = "Client cadastrado com sucesso")
     public ResponseEntity<Void> save(@RequestBody ClientDTO clientDTO) {
+        log.info("Registrando novo Client: {} com scope {}", clientDTO.clientId(), clientDTO.scope());
         Client client = clientMapper.toEntity(clientDTO);
         clientService.save(client);
         URI uri = gerarHeaderLocation(client.getId());
@@ -90,6 +93,7 @@ public class ClientController implements GenericController {
             @ApiResponse(responseCode = "204", description = "Client deletado com sucesso")
     })
     public ResponseEntity<Void> deleteClient(@PathVariable String id) {
+        log.info("Deletando Client com ID: {} ", id);
         UUID clientId = UUID.fromString(id);
         Optional<Client> clientOptional = clientService.findById(clientId);
 
