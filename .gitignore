@@ -33,4 +33,5 @@ build/
 .vscode/
 
 ### LOG ###
-app.log
+*.log
+*.gz
